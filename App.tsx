@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import MainScreen from './Home';
 import { useNavigation } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -30,7 +31,12 @@ export default function App() {
         }
       ]}
       type={'fullscreen'}
-      onDone={() => navigation.navigate("Main")}
+      onDone={() => navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Main' }],
+        })
+      )}
     />);
   }
   return (
