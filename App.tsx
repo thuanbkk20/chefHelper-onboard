@@ -6,9 +6,25 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import MainScreen from './Home';
 import { useNavigation } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
+import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(false);
+  React.useEffect(()=>{
+    const fetchData = async ()=>{
+      const appData = await AsyncStorage.getItem('isAppFirstLaunched');
+      console.log(appData);
+      if(appData === null){
+        setIsAppFirstLaunched(false);
+      }else{
+        setIsAppFirstLaunched(true);
+      }
+    }
+    fetchData();
+  }, [])
   const Onboarding = () => {
     const navigation = useNavigation();
     return (<OnboardFlow
@@ -30,14 +46,23 @@ export default function App() {
         }
       ]}
       type={'fullscreen'}
-      onDone={() => navigation.navigate("Main")}
+      onDone={() => {
+        AsyncStorage.setItem('isAppFirstLaunched', 'true');
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Main' }],
+          })
+        )
+        }
+      }
     />);
   }
   return (
 
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
+        {!isAppFirstLaunched && (<Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />)}
         <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
