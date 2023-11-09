@@ -2,10 +2,16 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { OnboardFlow } from 'react-native-onboard';
 import { Image } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import MainScreen from './Home';
+import { useNavigation } from '@react-navigation/native';
+const Stack = createStackNavigator();
 
 export default function App() {
-  return (
-    <OnboardFlow
+  const Onboarding = () => {
+    const navigation = useNavigation();
+    return (<OnboardFlow
       pages={[
         {
           title: 'Unleash Your Inner Chef',
@@ -24,7 +30,17 @@ export default function App() {
         }
       ]}
       type={'fullscreen'}
-    />
+      onDone={() => navigation.navigate("Main")}
+    />);
+  }
+  return (
+
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
+        <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
