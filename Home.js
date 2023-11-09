@@ -4,11 +4,11 @@ const MainScreen= ()=>{
     return (
         <View
           style={{
-            flexDirection: 'row',
-            height: 100,
-            padding: 20,
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-          <Text>Hello World!</Text>
+          <Text>Home Page</Text>
         </View>
       );
     
